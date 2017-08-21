@@ -9,10 +9,11 @@ import (
 	"github.com/coredns/coredns/core/dnsserver"
 	"github.com/coredns/coredns/middleware"
 	"github.com/coredns/coredns/middleware/pkg/dnsutil"
+	"github.com/coredns/coredns/middleware/pkg/transfer"
 	"github.com/coredns/coredns/middleware/proxy"
-	"github.com/miekg/dns"
 
 	"github.com/mholt/caddy"
+	"github.com/miekg/dns"
 	unversionedapi "k8s.io/client-go/1.5/pkg/api/unversioned"
 )
 
@@ -174,6 +175,13 @@ func kubernetesParse(c *caddy.Controller) (*Kubernetes, dnsControlOpts, error) {
 					return nil, opts, err
 				}
 				k8s.Proxy = proxy.NewLookup(ups)
+
+			case "transfer":
+				t, _, e := transfer.Parse(c, false)
+				if e != nil {
+					return nil, e
+				}
+				t = t // TODO(miek) hook up into xfr or kubernetes
 			default:
 				return nil, opts, c.Errf("unknown property '%s'", c.Val())
 			}
