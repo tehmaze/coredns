@@ -64,6 +64,8 @@ func kubernetesParse(c *caddy.Controller) (*Kubernetes, dnsControlOpts, error) {
 	k8s.interfaceAddrsFunc = localPodIP
 	k8s.autoPathSearch = searchFromResolvConf()
 
+	k8s.xfr = NewXfr(k8s)
+
 	opts := dnsControlOpts{
 		resyncPeriod: defaultResyncPeriod,
 	}
@@ -181,7 +183,10 @@ func kubernetesParse(c *caddy.Controller) (*Kubernetes, dnsControlOpts, error) {
 				if e != nil {
 					return nil, opts, e
 				}
-				t = t // TODO(miek) hook up into xfr or kubernetes
+				opts.updateHander = k8s.xfr.UpdateHandler
+				opts.addDeleteHandler = k8s.xfr.AddDeleteHandler
+
+				k8s.xfr.transferTo = append(k8s.xfr.transferTo, t...)
 			default:
 				return nil, opts, c.Errf("unknown property '%s'", c.Val())
 			}

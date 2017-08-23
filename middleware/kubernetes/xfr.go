@@ -15,7 +15,8 @@ import (
 type Xfr struct {
 	*Kubernetes
 	sync.RWMutex
-	epoch time.Time
+	epoch      time.Time
+	transferTo []string
 }
 
 // ServeDNS implements the middleware.Handler interface.
@@ -122,14 +123,14 @@ func (x *Xfr) serial() uint32 {
 	return uint32(x.epoch.Unix())
 }
 
-// Give these to dnscontroller via the options, so these functions get exectuted and the SOA's serial gets updated.
-func (x *Xfr) AddDeleteXfrHandler(a interface{}) {
+// These handlers are called whenever a watch fires. We just update the serial to now.
+func (x *Xfr) AddDeleteHandler(a interface{}) {
 	x.Lock()
 	defer x.Unlock()
 	x.epoch = time.Now().UTC()
 }
 
-func (x *Xfr) UpdateXfrHandler(a, b interface{}) {
+func (x *Xfr) UpdateHandler(a, b interface{}) {
 	x.Lock()
 	defer x.Unlock()
 	x.epoch = time.Now().UTC()
@@ -144,13 +145,3 @@ func newHdr(typ uint16, labels ...string) dns.RR_Header {
 	h.Class = dns.ClassINET
 	return h
 }
-
-/*
-cache.ResourceEventHandlerFuncs{
-    AddFunc: x.AddDeleteXfrHandler,
-    DeleteFunc: x.AddDeleteXfrHandler,
-    UpdateFunc: x.UpdateXfrHandler,
-}
-
-// set to nil? Or noop functions as defaults?
-*/
