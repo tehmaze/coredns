@@ -179,7 +179,7 @@ func kubernetesParse(c *caddy.Controller) (*Kubernetes, dnsControlOpts, error) {
 			case "transfer":
 				t, _, e := transfer.Parse(c, false)
 				if e != nil {
-					return nil, e
+					return nil, opts, e
 				}
 				t = t // TODO(miek) hook up into xfr or kubernetes
 			default:

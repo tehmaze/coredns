@@ -10,6 +10,9 @@ func TestAxfr(t *testing.T) {
 	k.APIConn = &APIConnServeTest{}
 
 	x := NewXfr(k)
-	x.All("example.org.")
-	fmt.Println()
+	rrs := x.All("example.org.")
+	fmt.Println("\n** NEXT **")
+	for _, rr := range rrs {
+		fmt.Printf("%s\n", rr)
+	}
 }

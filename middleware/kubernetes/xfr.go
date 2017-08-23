@@ -2,7 +2,7 @@ package kubernetes
 
 import (
 	"context"
-	"fmt"
+	"net"
 	"sync"
 	"time"
 
@@ -54,8 +54,6 @@ func NewXfr(k *Kubernetes) *Xfr {
 // All returns all kubernetes records with a SOA at the start.
 func (x *Xfr) All(zone string) []dns.RR {
 
-	// This is super expensive as we use dns.NewRR to create the RRs.
-
 	res := []dns.RR{}
 
 	serviceList := x.APIConn.ServiceList()
@@ -75,10 +73,20 @@ func (x *Xfr) All(zone string) []dns.RR {
 					for _, addr := range eps.Addresses {
 						for _, p := range eps.Ports {
 
-							fmt.Printf("%T\n", addr.IP)
-							fmt.Printf("%s IN A %s\n", name, addr.IP)
-							fmt.Printf("_%s._%s.%s IN SRV %d %s.%s\n", p.Name, p.Protocol, name, p.Port, endpointHostname(addr), name)
-							fmt.Printf("%s.%s IN A %s\n", endpointHostname(addr), name, addr.IP)
+							ip := net.ParseIP(addr.IP).To4()
+
+							h := newHdr(dns.TypeA, name)
+							a := &dns.A{Hdr: h, A: ip}
+							res = append(res, a)
+
+							h = newHdr(dns.TypeA, endpointHostname(addr), name)
+							a = &dns.A{Hdr: h, A: ip}
+							res = append(res, a)
+
+							h = newHdr(dns.TypeSRV, p.Name, string(p.Protocol), name)
+							s := &dns.SRV{Hdr: h, Port: uint16(p.Port), Target: dnsutil.Join([]string{endpointHostname(addr), name})}
+							res = append(res, s)
+
 						}
 					}
 				}
@@ -88,14 +96,21 @@ func (x *Xfr) All(zone string) []dns.RR {
 
 		// External service
 		if svc.Spec.ExternalName != "" {
-			fmt.Printf("%s IN CNAME %s", name, svc.Spec.ExternalName)
+			h := newHdr(dns.TypeCNAME, name)
+			c := &dns.CNAME{Hdr: h, Target: dns.Fqdn(name)}
+			res = append(res, c)
 			continue
 		}
 
 		// ClusterIP service
-		fmt.Printf("%s IN A %s\n", name, svc.Spec.ClusterIP)
+		h := newHdr(dns.TypeA, name)
+		a := &dns.A{Hdr: h, A: net.ParseIP(svc.Spec.ClusterIP).To4()}
+		res = append(res, a)
+
 		for _, p := range svc.Spec.Ports {
-			fmt.Printf("_%s._%s.%s IN SRV %s\n", p.Name, p.Protocol, name, name)
+			h := newHdr(dns.TypeSRV, p.Name, string(p.Protocol), name)
+			s := &dns.SRV{Hdr: h, Port: uint16(p.Port), Target: dns.Fqdn(name)}
+			res = append(res, s)
 		}
 	}
 	return res
@@ -118,6 +133,16 @@ func (x *Xfr) UpdateXfrHandler(a, b interface{}) {
 	x.Lock()
 	defer x.Unlock()
 	x.epoch = time.Now().UTC()
+}
+
+// newHdr returns a new RR header with ownername fully qualifed and ttl set.
+func newHdr(typ uint16, labels ...string) dns.RR_Header {
+	h := dns.RR_Header{}
+	h.Name = dnsutil.Join(labels)
+	h.Rrtype = typ
+	h.Ttl = 5
+	h.Class = dns.ClassINET
+	return h
 }
 
 /*
