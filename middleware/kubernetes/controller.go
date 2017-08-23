@@ -76,6 +76,9 @@ type dnsControlOpts struct {
 	// Label handling.
 	labelSelector *unversionedapi.LabelSelector
 	selector      *labels.Selector
+	// Xfr serial events handlers
+	addDeleteHandler func(a interface{})
+	updateHander     func(a, b interface{})
 }
 
 // newDNSController creates a controller for CoreDNS.
