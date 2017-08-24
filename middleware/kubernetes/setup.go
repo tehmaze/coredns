@@ -183,7 +183,7 @@ func kubernetesParse(c *caddy.Controller) (*Kubernetes, dnsControlOpts, error) {
 				if e != nil {
 					return nil, opts, e
 				}
-				opts.updateHander = k8s.xfr.UpdateHandler
+				opts.updateHandler = k8s.xfr.UpdateHandler
 				opts.addDeleteHandler = k8s.xfr.AddDeleteHandler
 
 				k8s.xfr.transferTo = append(k8s.xfr.transferTo, t...)
