@@ -38,7 +38,7 @@ func setup(c *caddy.Controller) error {
 
 	dnsserver.GetConfig(c).AddMiddleware(func(next middleware.Handler) middleware.Handler {
 		fed.Next = next
-		return nil
+		return fed
 	})
 
 	return nil
