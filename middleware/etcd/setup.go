@@ -74,8 +74,6 @@ func etcdParse(c *caddy.Controller) (*Etcd, bool, error) {
 				switch c.Val() {
 				case "stubzones":
 					stubzones = true
-				case "fallthrough":
-					etc.Fallthrough = true
 				case "debug":
 					etc.Debugging = true
 				case "path":
