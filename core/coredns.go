@@ -16,6 +16,7 @@ import (
 	_ "github.com/coredns/coredns/plugin/errors"
 	_ "github.com/coredns/coredns/plugin/etcd"
 	_ "github.com/coredns/coredns/plugin/file"
+	_ "github.com/coredns/coredns/plugin/geo"
 	_ "github.com/coredns/coredns/plugin/health"
 	_ "github.com/coredns/coredns/plugin/kubernetes"
 	_ "github.com/coredns/coredns/plugin/loadbalance"

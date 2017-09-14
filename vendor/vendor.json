@@ -1,0 +1,49 @@
+{
+	"comment": "",
+	"ignore": "",
+	"package": [
+		{
+			"checksumSHA1": "wY1ET0bF3VGqVoctk9lPz0m7x3Q=",
+			"path": "github.com/oschwald/geoip2-golang",
+			"revision": "5b1dc16861f81d05d9836bb21c2d0d65282fc0b8",
+			"revisionTime": "2017-04-23T21:58:58Z"
+		},
+		{
+			"checksumSHA1": "YB05b6xv8VP/0OvAuty2zUhcAMI=",
+			"path": "github.com/oschwald/maxminddb-golang",
+			"revision": "26fe5ace1c706491c2936119e1dc69c1a9c04d7f",
+			"revisionTime": "2017-09-01T13:40:56Z"
+		},
+		{
+			"checksumSHA1": "RZOdTSZN/PgcTqko5LzIAzw+UT4=",
+			"path": "github.com/pmezard/go-difflib/difflib",
+			"revision": "792786c7400a136282c1664665ae0a8db921c6c2",
+			"revisionTime": "2016-01-10T10:55:54Z"
+		},
+		{
+			"checksumSHA1": "91EfCJAOMeh5IIiFBn6uJ/Hrbss=",
+			"path": "github.com/rainycape/geoip",
+			"revision": "79e9946b7c4c4d0bd83aff6c5256155556078382",
+			"revisionTime": "2017-02-17T19:54:15Z"
+		},
+		{
+			"checksumSHA1": "Y9SmG2U/qez70e6PIe03dts063Y=",
+			"path": "github.com/stretchr/testify/assert",
+			"revision": "890a5c3458b43e6104ff5da8dfa139d013d77544",
+			"revisionTime": "2017-07-05T02:17:15Z"
+		},
+		{
+			"checksumSHA1": "ScqHWd1gW9LrFxlYaGOE9RUm3Dg=",
+			"path": "github.com/stretchr/testify/require",
+			"revision": "890a5c3458b43e6104ff5da8dfa139d013d77544",
+			"revisionTime": "2017-07-05T02:17:15Z"
+		},
+		{
+			"checksumSHA1": "538I8ghUdvZa25NxgMUDpq14Qic=",
+			"path": "gopkg.in/check.v1",
+			"revision": "20d25e2804050c1cd24a7eea1e7a6447dd0e74ec",
+			"revisionTime": "2016-12-08T18:13:25Z"
+		}
+	],
+	"rootPath": "github.com/coredns/coredns"
+}

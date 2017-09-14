@@ -39,6 +39,7 @@ var directives = []string{
 	"proxy",
 	"erratic",
 	"whoami",
+	"geo",
 	"startup",
 	"shutdown",
 }
