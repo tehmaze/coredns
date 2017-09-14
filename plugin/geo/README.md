@@ -8,9 +8,9 @@ configuration syntax is (mostly) compatible.
 
 ## Syntax
 
----
+```
 geo <filename>
----
+```
 
 * **filename** is the absolute path to the YaML configuration file.
 
@@ -19,7 +19,7 @@ geo <filename>
 This is an example configuration offering continent-based Geo DNS resolution
 on the `geo.example.org` domain:
 
----
+```
 database: /etc/coredns/GeoLite2-Country.mmdb
 domains:
 - domain: example.org
@@ -67,7 +67,7 @@ domains:
 
   services:
     geo.example.org: '%cn.example.org'
----
+```
 
 ## Service placeholders
 
